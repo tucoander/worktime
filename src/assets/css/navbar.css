@@ -1,0 +1,79 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    font-family: 'Rotobo', Arial, Helvetica, sans-serif;
+    height: 100vh;
+}
+
+header {
+    width: 100%;
+    background: url("../img/bosch-faixa.png") #222 bottom center repeat;
+}
+header ul {
+    display: flex;
+    justify-content: flex-end; 
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+}
+header ul li {
+    list-style: none;
+    position: relative;
+    padding: 10px 0;
+    transition: 0.5s;
+    border-right: 1px solid rgba(255,255,255, 0.2);
+}
+header ul li:hover {
+    background: #2196f3;
+}
+header ul li:last-child {
+    border-right: none;
+}
+header ul li a{
+    text-decoration: none;
+    padding: 0 20px;
+    color: #fff;
+}
+
+header ul li ul{
+    position: absolute;
+    top: 39px;
+    left: 0;
+    background: url("../img/bosch-faixa.png") #222 bottom center no-repeat;
+    display: block;
+    width: 250px;
+    transition: 0.5s;
+    opacity: 0;
+    visibility: hidden;
+}
+header ul li:hover ul{
+    opacity: 1;
+    visibility: visible;
+}
+
+header ul li ul li{
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255, 0.2);
+}
+
+@media (max-width: 768px ){
+    header ul {
+        display: block;
+    }
+
+    header ul li{
+        display: list-item;
+    }
+
+    header ul li ul{
+        width: 100%;
+        z-index: 2;
+    }
+}

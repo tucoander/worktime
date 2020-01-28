@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+TC&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Noto Sans TC', sans-serif;
+}
+
+.main {
+    margin:  0 10px;
+    padding: 10px;
+}
+
+.titulo-area {
+    margin: 0 10px;
+    padding: 0 10px;
+}
+
+.titulo-area .titulo-pag{
+    /* border: 1px solid #dbdbdb; */
+    margin: 0 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 0;
+}
+.titulo-area .titulo-pag h1{
+    font-size: 28px;
+}
+
+.form {
+    margin: 10px;
+    padding: 10px;
+    margin-top: 0;
+    padding-top: 0;
+}
+
+.form .inputs-group {
+    /* border: 1px solid #dbdbdb; */
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+}
+.form .inputs-group .input-label  {
+    display: flex;
+    flex-direction: column;
+    justify-items: center;
+    margin: 5px 15px;
+    padding: 5px;
+    flex: 1;
+}
+
+.form .inputs-group .input-label  label {
+    width: fit-content;
+    font-weight: bold;
+    color: #6d6c6c;
+    margin-bottom: 10px;
+}
+
+.form .inputs-group .input-label input {
+    border: none;
+    border-bottom: 1px solid #a5a5a5;
+    height: 30px;
+}
+
+.form .inputs-group .input-label input::placeholder {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form .inputs-group .input-label select {
+    border: none;
+    border-bottom: 1px solid #a5a5a5;
+    height: 30px;
+    -webkit-appearance: none;
+   -moz-appearance: none;
+   appearance: none;  
+}
+
+.form .inputs-group .input-label textarea {
+    border: none;
+    border-bottom: 1px solid #a5a5a5;
+    height: 30px;
+}
+
+.form .inputs-group .input-label input:focus, select:focus, textarea:focus {
+    background: #e9e9e9af;
+    font-weight: bold;
+}
+
+.form .buttons-group {
+    /* border: 1px solid #dbdbdb; */
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    justify-content: flex-end;
+}
+
+.form .buttons-group button{
+    border: 1px solid black;
+    color: #dbdbdb;
+    background: #000;
+    margin: 0 10px;
+    padding: 10px 20px;
+    min-width: 250px;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.form .buttons-group button:hover {
+    background: #2196f3;
+    color: #FFF;
+    border: 1px solid #2195f3ce;
+}
+
+@media only screen and (max-width: 768px) {
+    .main {
+        margin:  0px;
+        padding: 0px;
+    }
+
+    .titulo-area {
+        margin: 0 5px;
+        padding: 5px;
+    }
+
+    .titulo-area .titulo-pag{
+        margin: 0 5px;
+        padding: 10px;
+    }
+
+    .form {
+        margin: 5px;
+        padding: 5px;
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+    .form .inputs-group {
+        border: 1px solid #dbdbdb;
+        margin: 5px;
+        padding: 5px;
+        display: flex;
+        flex-direction: column;
+    }
+}
