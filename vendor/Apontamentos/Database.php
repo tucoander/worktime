@@ -146,7 +146,20 @@ class Database
         if (empty($get['from']) && empty($get['to'])) {
             
             $select = "
-            SELECT * 
+            SELECT
+                ul.log_id as log_id,
+                ul.usr_id as usr_id,
+                ul.prd_id as prd_id,
+                ul.opr_id as opr_id,
+                ul.cty_id as cty_id,
+                ul.to_usr_id as to_usr_id,
+                substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),0,11) as logdte,
+                substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),12,5) as fr_logtim,
+                substr(datetime(ul.logdte||' '||ul.to_logtim, '-4 hour'),12,5) as to_logtim,
+                ul.usrobs,
+                up.*,
+                uc.*,
+                uo.*
             FROM usrlog ul
                 inner join  usrprd up 
                 on (ul.prd_id = up.prd_id)
@@ -154,22 +167,32 @@ class Database
                 on (ul.cty_id = uc.cty_id)
                 inner join usropr uo
                 on (ul.opr_id = uo.opr_id)
-            WHERE ul.usr_id = :usr_id
-            order by ul.logdte asc
             ";
             $comando = $this->database->prepare($select);
             $comando->bindValue(':usr_id', $get['logged_usr_id']);
             
         } else if (empty($get['from']) && !empty($get['to'])) {
             $select = "
-            SELECT * 
+            SELECT
+                ul.log_id as log_id,
+                ul.usr_id as usr_id,
+                ul.prd_id as prd_id,
+                ul.opr_id as opr_id,
+                ul.cty_id as cty_id,
+                ul.to_usr_id as to_usr_id,
+                substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),0,11) as logdte,
+                substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),12,5) as fr_logtim,
+                substr(datetime(ul.logdte||' '||ul.to_logtim, '-4 hour'),12,5) as to_logtim,
+                ul.usrobs,
+                up.*,
+                uc.*,
+                uo.*
             FROM usrlog ul
                 inner join  usrprd up 
                 on (ul.prd_id = up.prd_id)
                 inner join usrcty uc
                 on (ul.cty_id = uc.cty_id)
                 inner join usropr uo
-                on (ul.opr_id = uo.opr_id)
             WHERE ul.usr_id = :usr_id
                 AND ul.logdte <= :to
             order by ul.logdte asc
@@ -181,14 +204,26 @@ class Database
 
         } else if (!empty($get['from']) && empty($get['to'])) {
             $select = "
-            SELECT * 
+            SELECT
+                ul.log_id as log_id,
+                ul.usr_id as usr_id,
+                ul.prd_id as prd_id,
+                ul.opr_id as opr_id,
+                ul.cty_id as cty_id,
+                ul.to_usr_id as to_usr_id,
+                substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),0,11) as logdte,
+                substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),12,5) as fr_logtim,
+                substr(datetime(ul.logdte||' '||ul.to_logtim, '-4 hour'),12,5) as to_logtim,
+                ul.usrobs,
+                up.*,
+                uc.*,
+                uo.*
             FROM usrlog ul
                 inner join  usrprd up 
                 on (ul.prd_id = up.prd_id)
                 inner join usrcty uc
                 on (ul.cty_id = uc.cty_id)
                 inner join usropr uo
-                on (ul.opr_id = uo.opr_id)
             WHERE ul.usr_id = :usr_id
                 AND ul.logdte >= :from
             order by ul.logdte asc
@@ -200,14 +235,26 @@ class Database
 
         } else if (!empty($get['from']) && !empty($get['to'])) {
             $select = "
-            SELECT * 
+            SELECT
+                ul.log_id as log_id,
+                ul.usr_id as usr_id,
+                ul.prd_id as prd_id,
+                ul.opr_id as opr_id,
+                ul.cty_id as cty_id,
+                ul.to_usr_id as to_usr_id,
+                substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),0,11) as logdte,
+                substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),12,5) as fr_logtim,
+                substr(datetime(ul.logdte||' '||ul.to_logtim, '-4 hour'),12,5) as to_logtim,
+                ul.usrobs,
+                up.*,
+                uc.*,
+                uo.*
             FROM usrlog ul
                 inner join  usrprd up 
                 on (ul.prd_id = up.prd_id)
                 inner join usrcty uc
                 on (ul.cty_id = uc.cty_id)
                 inner join usropr uo
-                on (ul.opr_id = uo.opr_id)
             WHERE ul.usr_id = :usr_id
                 AND ul.logdte >= :from 
                 AND ul.logdte <= :to
@@ -690,20 +737,23 @@ class Database
 
     public function listAllRecords($data){
         $select = "
-            SELECT
+        SELECT
             ul.log_id as log_id,
             ul.usr_id as usr_id,
             up.prdnme as prdnme,
             uo.oprnme as oprnme,
             uc.ctynme as ctynme,
-            ul.logdte as logdte,
-            ul.fr_logtim as fr_logtim,
-            ul.to_logtim as to_logtim,
-            ul.usrobs    
+            substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),0,11) as logdte,
+            substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),12,5) as fr_logtim,
+            substr(datetime(ul.logdte||' '||ul.to_logtim, '-4 hour'),12,5) as to_logtim,
+            ul.usrobs,
+            uf.funidx
         FROM usrlog ul
             left join usrprd up on (ul.prd_id = up.prd_id)
             left join usropr uo on (ul.opr_id = uo.opr_id)
             left join usrcty uc on (ul.cty_id = uc.cty_id)
+            left join funusr fu on (ul.usr_id = fu.usr_id)
+            left join usrfun uf on (fu.fun_id = uf.fun_id)
         WHERE  ul.logdte between :from and :to
         UNION
         select 
@@ -712,11 +762,14 @@ class Database
             'Indisponivel' as prdnme,
             'Indisponivel' as oprnme,
         'Indisponivel' as ctynme,
-            ui.inddte,
-            ui.fr_logtim,
-            ui.to_logtim,
-            ui.indobs   
+            substr(datetime(ui.inddte||' '||ui.fr_logtim, '-4 hour'),0,11) as logdte,
+            substr(datetime(ui.inddte||' '||ui.fr_logtim, '-4 hour'),12,5) as fr_logtim,
+            substr(datetime(ui.inddte||' '||ui.to_logtim, '-4 hour'),12,5) as to_logtim,
+            ui.indobs,
+            uf.funidx 
         from usrind ui
+            left join funusr fu on (ui.usr_id = fu.usr_id)
+            left join usrfun uf on (fu.fun_id = uf.fun_id)
             where ui.inddte between :from and :to
         ";
         $response = array(
