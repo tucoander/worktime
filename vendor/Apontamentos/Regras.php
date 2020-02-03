@@ -177,7 +177,7 @@ class Regras {
     public function generateDateInterval($from, $to)
     {
         if(!empty($from) && !empty($to)){
-            $intervalo =  date_diff(date_create($_GET['to']), date_create($_GET['from']));
+            $intervalo =  date_diff(date_create($from), date_create($to));
             $intervalo =  $intervalo->d;
             $data_form = $from;
         }
@@ -203,7 +203,7 @@ class Regras {
     public function getDateInterval($from, $to)
     {
         if(!empty($from) && !empty($to)){
-            $intervalo =  date_diff(date_create($_GET['to']), date_create($_GET['from']));
+            $intervalo =  date_diff(date_create($to), date_create($from));
             $intervalo =  $intervalo->d;
             $data_form = $from;
         }
@@ -231,7 +231,6 @@ class Regras {
         return $semfds;
     }
 
-    
 }
 
 ?>
