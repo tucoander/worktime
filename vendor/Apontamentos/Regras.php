@@ -275,6 +275,13 @@ class Regras {
 
         return $temp;
     }
+
+    public function dateStandard($date)
+    {
+        $temp = date_format(date_create($date), 'd/m/Y');
+        return $temp;
+        
+    }
 }
 
 ?>
