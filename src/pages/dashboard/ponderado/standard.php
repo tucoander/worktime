@@ -93,6 +93,3 @@ if($registros['status'] == 1){
 else{
 
 }
-
- 
-
