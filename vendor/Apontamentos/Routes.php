@@ -14,22 +14,15 @@ class Routes {
                 "Inserir" => $folder."src/pages/apontamento/usuario/inserir/",
                 "Tabela" => $folder."src/pages/apontamento/usuario/consultar/",
                 "Gráfico" => $folder."src/pages/apontamento/usuario/editar/",
-                "Indisponibilidade" => $folder."src/pages/apontamento/usuario/editar/",
             ), 
             "Dashboard" => array(
                 "Disponibilidade Padrão" => $folder."src/pages/dashboard/standard/",
-                "Disponibilidade Ponderada" => "",
+                "Disponibilidade Ponderada" => $folder."src/pages/dashboard/ponderado/",
                 "Operações" =>  $folder."src/pages/dashboard/operacao/",
-                "Produtos" => "",
-                "Produtos por usuário" => ""
             ),
             "Gestor" => array(
                 "Inserir lançamentos" => $folder."src/pages/apontamento/gestor/inserir/",
                 "Consultar Lançamento" => $folder."src/pages/apontamento/gestor/consultar/",
-                "Disponibilidade Ponderada" => "",
-                "Operações" => "",
-                "Produtos" => "",
-                "Produtos por usuário" => ""
             )
         );
 
