@@ -231,6 +231,50 @@ class Regras {
         return $semfds;
     }
 
+    public function generateUserArray($select)
+    {
+        $temp = array();
+        foreach ($select as $k => $usr) {
+            $temp[$usr['usr_id']] = array();
+        }
+        return $temp;
+    }
+    public function validateIntervalDate($to)
+    {
+        $temp = '';
+        if(date_create($to) > date_create(date('Y-m-d'))){
+            $temp = date_format(date_create(date('Y-m-d')),'Y-m-d');
+        }
+        else{
+            $temp = $to;
+        }
+        return $temp;
+    }
+
+    public function generateDateArray($intervalo)
+    {
+        $temp = array();
+        foreach ($intervalo as $k => $date) {
+            $weekday = date_format(date_create($date), 'w') ;
+            if($weekday > 0 && $weekday < 6){
+                $temp[$date] = array();
+            }             
+        }
+        return $temp;
+    }
+
+    public function generateOperArray($select)
+    {
+        $temp = array();
+        foreach ($select as $k => $opr) {
+            $temp[$opr['oprnme']] = array();
+        }
+        $temp['Indisponivel'] = array();
+        $temp['Disponibilidade'] = array();
+        $temp['total'] = array();
+
+        return $temp;
+    }
 }
 
 ?>

@@ -561,7 +561,18 @@ class Database
     public function listUsers()
     {
         $select = "
-            SELECT usr_id, usrnme FROM usrsys GROUP BY usr_id, usrnme order by usrnme
+            SELECT 
+                us.usr_id as usr_id, 
+                us.usrnme as usrnme, 
+                uf.funidx as funidx
+            FROM usrsys us
+                left join funusr fu on (us.usr_id = fu.usr_id)
+                left join usrfun uf on (fu.fun_id = uf.fun_id)
+            GROUP BY 
+                us.usr_id, 
+                us.usrnme , 
+            uf.funidx
+            order by usrnme
         ";
         $comando = $this->database->prepare($select);
         $resultado = $comando->execute();
@@ -746,8 +757,8 @@ class Database
             substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),0,11) as logdte,
             substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),12,5) as fr_logtim,
             substr(datetime(ul.logdte||' '||ul.to_logtim, '-4 hour'),12,5) as to_logtim,
-            ul.usrobs,
-            uf.funidx
+            ul.usrobs as usrobs,
+            uf.funidx as funidx
         FROM usrlog ul
             left join usrprd up on (ul.prd_id = up.prd_id)
             left join usropr uo on (ul.opr_id = uo.opr_id)
@@ -781,6 +792,124 @@ class Database
             $comando = $this->database->prepare($select);
             $comando->bindValue('from', $data['from']);
             $comando->bindValue('to', $data['to']);
+            $resultado = $comando->execute();
+
+            while ($row = $resultado->fetchArray(SQLITE3_ASSOC)) {
+                $response['data'][] = $row;
+            }
+            $response['status'] = 1;
+            return $response;
+        } catch (\Exception $e) {
+            $response['status'] = 0;
+            $response['message'] = 'Caught exception: ' . $e->getMessage();
+            return $response;
+        }
+    }
+
+    public function listAllGroupedRecords($data){
+        $select = "
+        select logdte,
+            usr_id,
+            oprnme,
+            sum(wrkday) as t_wrkday,
+            sum(pon_wrkday) as t_p_wrkday
+    from (SELECT ul.log_id as log_id,
+                    ul.usr_id as usr_id,
+                    up.prdnme as prdnme,
+                    uo.oprnme as oprnme,
+                    uc.ctynme as ctynme,
+                    substr(datetime(ul.logdte || ' ' || ul.fr_logtim, '-4 hour'), 0, 11) as logdte,
+                    substr(datetime(ul.logdte || ' ' || ul.fr_logtim, '-4 hour'), 12, 5) as fr_logtim,
+                    substr(datetime(ul.logdte || ' ' || ul.to_logtim, '-4 hour'), 12, 5) as to_logtim,
+                    (julianday(datetime(ul.logdte || ' ' || ul.to_logtim, '-4 hour')) - julianday(datetime(ul.logdte || ' ' || ul.fr_logtim, '-4 hour'))) *24*60 as wrkday,
+                    (julianday(datetime(ul.logdte || ' ' || ul.to_logtim, '-4 hour')) - julianday(datetime(ul.logdte || ' ' || ul.fr_logtim, '-4 hour'))) *24*60*uf.funidx as pon_wrkday,
+                    uf.funidx as funidx
+            FROM usrlog ul
+            left
+            join usrprd up
+                on (ul.prd_id = up.prd_id)
+            left
+            join usropr uo
+                on (ul.opr_id = uo.opr_id)
+            left
+            join usrcty uc
+                on (ul.cty_id = uc.cty_id)
+            left
+            join funusr fu
+                on (ul.usr_id = fu.usr_id)
+            left
+            join usrfun uf
+                on (fu.fun_id = uf.fun_id)
+            WHERE ul.logdte between :from
+                and :to
+            union
+            select ui.ind_id,
+                    ui.usr_id,
+                    'Indisponivel' as prdnme,
+                    'Indisponivel' as oprnme,
+                    'Indisponivel' as ctynme,
+                    substr(datetime(ui.inddte || ' ' || ui.fr_logtim, '-4 hour'), 0, 11) as logdte,
+                    substr(datetime(ui.inddte || ' ' || ui.fr_logtim, '-4 hour'), 12, 5) as fr_logtim,
+                    substr(datetime(ui.inddte || ' ' || ui.to_logtim, '-4 hour'), 12, 5) as to_logtim,
+                    (julianday(datetime(ui.inddte || ' ' || ui.to_logtim, '-4 hour')) - julianday(datetime(ui.inddte || ' ' || ui.fr_logtim, '-4 hour'))) *24*60 as wrkday,
+                    (julianday(datetime(ui.inddte || ' ' || ui.to_logtim, '-4 hour')) - julianday(datetime(ui.inddte || ' ' || ui.fr_logtim, '-4 hour'))) *24*60*uf.funidx as pon_wrkday,
+                    uf.funidx
+            from usrind ui
+            left
+            join funusr fu
+                on (ui.usr_id = fu.usr_id)
+            left
+            join usrfun uf
+                on (fu.fun_id = uf.fun_id)
+            WHERE ui.inddte between :from
+                and :to)
+    group by logdte,
+            usr_id,
+            oprnme
+        ";
+        $response = array(
+            "status"=> "",
+            "message"=> "",
+            "data"=> array()
+        );
+        try {
+            $comando = $this->database->prepare($select);
+            $comando->bindValue('from', $data['from']);
+            $comando->bindValue('to', $data['to']);
+            $resultado = $comando->execute();
+
+            while ($row = $resultado->fetchArray(SQLITE3_ASSOC)) {
+                $response['data'][] = $row;
+            }
+            $response['status'] = 1;
+            return $response;
+        } catch (\Exception $e) {
+            $response['status'] = 0;
+            $response['message'] = 'Caught exception: ' . $e->getMessage();
+            return $response;
+        }
+    }
+
+    public function listWorkDayUser(){
+        $select = "
+        select uw.usr_id,
+            (julianday(datetime(to_logtim, '-4 hour')) - julianday(datetime(fr_logtim, '-4 hour'))) *24*60 as wrkday,
+            (julianday(datetime(to_logtim, '-4 hour')) - julianday(datetime(fr_logtim, '-4 hour'))) *24*60*uf.funidx as pon_wrkday
+        from usrwrk uw
+        left
+        join funusr fu
+            on (uw.usr_id = fu.usr_id)
+        left
+        join usrfun uf
+            on (fu.fun_id = uf.fun_id)
+        ";
+        $response = array(
+            "status"=> "",
+            "message"=> "",
+            "data"=> array()
+        );
+        try {
+            $comando = $this->database->prepare($select);
             $resultado = $comando->execute();
 
             while ($row = $resultado->fetchArray(SQLITE3_ASSOC)) {
