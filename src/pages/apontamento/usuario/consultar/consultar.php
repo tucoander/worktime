@@ -11,7 +11,7 @@
     $validacao = $fechamento->getLastDayAvailable();
 
     $indisponibilidade = $sql->semanaIndisponivel($fechamento->dia_limite, $fechamento->horario_limite);
-    
+
     $lista = $sql->listRecords($_GET);
     
     $tabela = '
@@ -23,9 +23,7 @@
                 <th>Operação</th>
                 <th>País</th>
                 <th>Solicitante</th>
-                <th>Data</th>
-                <th>Hora Início</th>
-                <th>Hora Fim</th>
+                <th>Data e Hora</th>
                 <th>Observações</th>
                 <th style="width: 250px;">Ação</th>
             </tr>
@@ -40,9 +38,7 @@
                 <td>'.$value['oprnme'].'</td>
                 <td>'.$value['ctynme'].'</td>
                 <td>'.$value['to_usr_id'].'</td>
-                <td>'.$value['logdte'].'</td>
-                <td>'.$value['fr_logtim'].'</td>
-                <td>'.$value['to_logtim'].'</td>
+                <td>'.$regras->dateStandard($value['logdte_p']).' '.$value['fr_logtim_p'].' - '.$value['to_logtim_p'].'</td>
                 <td>'.$value['usrobs'].'</td>';
         if($value['logdte'] >= $validacao['domingo'] ){
             $tabela .= '

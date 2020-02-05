@@ -156,6 +156,9 @@ class Database
                 substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),0,11) as logdte,
                 substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),12,5) as fr_logtim,
                 substr(datetime(ul.logdte||' '||ul.to_logtim, '-4 hour'),12,5) as to_logtim,
+                ul.logdte as logdte_p,
+                ul.fr_logtim as fr_logtim_p,
+                ul.to_logtim as to_logtim_p,
                 ul.usrobs,
                 up.*,
                 uc.*,
@@ -183,6 +186,9 @@ class Database
                 substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),0,11) as logdte,
                 substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),12,5) as fr_logtim,
                 substr(datetime(ul.logdte||' '||ul.to_logtim, '-4 hour'),12,5) as to_logtim,
+                ul.logdte as logdte_p,
+                ul.fr_logtim as fr_logtim_p,
+                ul.to_logtim as to_logtim_p,
                 ul.usrobs,
                 up.*,
                 uc.*,
@@ -193,6 +199,7 @@ class Database
                 inner join usrcty uc
                 on (ul.cty_id = uc.cty_id)
                 inner join usropr uo
+                on (ul.opr_id = uo.opr_id)
             WHERE ul.usr_id = :usr_id
                 AND ul.logdte <= :to
             order by ul.logdte asc
@@ -214,6 +221,9 @@ class Database
                 substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),0,11) as logdte,
                 substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),12,5) as fr_logtim,
                 substr(datetime(ul.logdte||' '||ul.to_logtim, '-4 hour'),12,5) as to_logtim,
+                ul.logdte as logdte_p,
+                ul.fr_logtim as fr_logtim_p,
+                ul.to_logtim as to_logtim_p,
                 ul.usrobs,
                 up.*,
                 uc.*,
@@ -224,6 +234,7 @@ class Database
                 inner join usrcty uc
                 on (ul.cty_id = uc.cty_id)
                 inner join usropr uo
+                on (ul.opr_id = uo.opr_id)
             WHERE ul.usr_id = :usr_id
                 AND ul.logdte >= :from
             order by ul.logdte asc
@@ -245,6 +256,9 @@ class Database
                 substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),0,11) as logdte,
                 substr(datetime(ul.logdte||' '||ul.fr_logtim, '-4 hour'),12,5) as fr_logtim,
                 substr(datetime(ul.logdte||' '||ul.to_logtim, '-4 hour'),12,5) as to_logtim,
+                ul.logdte as logdte_p,
+                ul.fr_logtim as fr_logtim_p,
+                ul.to_logtim as to_logtim_p,
                 ul.usrobs,
                 up.*,
                 uc.*,
@@ -255,6 +269,7 @@ class Database
                 inner join usrcty uc
                 on (ul.cty_id = uc.cty_id)
                 inner join usropr uo
+                on (ul.opr_id = uo.opr_id)
             WHERE ul.usr_id = :usr_id
                 AND ul.logdte >= :from 
                 AND ul.logdte <= :to
